@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,22 +7,57 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons"; // Import ikon bawaan
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useNavigation } from '@react-navigation/native';
+import { fetchPosts } from "../Api/restApi";
 
-export default function App() {
+export default function HomePage() {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const navigation = useNavigation()
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const toggleBalanceVisibility = () => {
     setIsBalanceVisible(!isBalanceVisible);
   };
+
+//   useEffect(() => {
+//     const getPosts = async () => {
+//         try {
+//             const data = await fetchPosts();
+//             setPosts(data);
+//         } catch (err) {
+//             setError(err.message);
+//         } finally {
+//             setLoading (false);
+//         }
+//     };
+
+//     getPosts();
+//   }, []);
+
+//   if (loading) {
+//     return <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />;
+//   }
+
+//   if (error) {
+//     return (
+//         <View style={styles.errorContainer}>
+//             <Text style={styles.errorText}> {error} </Text>
+//         </View>
+//     );
+//   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Header */}
       <View style={styles.header}>
         <Image
-          source={require("./assets/profil.png")}
+          source={require("../assets/profil.png")}
           style={styles.profileImage}
         />
         <View style={styles.headerText}>
@@ -30,7 +65,7 @@ export default function App() {
           <Text style={styles.accountType}>Personal Account</Text>
         </View>
         <Image
-          source={require("./assets/little-sun.png")}
+          source={require("../assets/little-sun.png")}
           style={styles.sunIcon}
         />
       </View>
@@ -38,27 +73,23 @@ export default function App() {
       {/* Body */}
       <ScrollView style={styles.body}>
         {/* Greeting */}
-        <View style={styles.card}>
-          <View style={styles.greetingContainer}>
-            <View>
-              <Text style={styles.greetingTitle}>Good Morning, Dila</Text>
-              <Text style={styles.greetingSubtitle}>
-                Check all your incoming and outgoing transactions here
-              </Text>
-            </View>
-            <Image
-              source={require("./assets/sun.png")}
-              style={styles.bigSunIcon}
-            />
+        <View style={styles.greetingContainer}>
+          <View>
+            <Text style={styles.greetingTitle}>Good Morning, Dila</Text>
+            <Text style={styles.greetingSubtitle}>
+              Check all your incoming and outgoing transactions here
+            </Text>
           </View>
+          <Image
+            source={require("../assets/sun.png")}
+            style={styles.bigSunIcon}
+          />
         </View>
 
         {/* Account Number */}
-        <View style={styles.card}>
-          <View style={styles.accountContainer}>
-            <Text style={styles.accountLabel}>Account No.</Text>
-            <Text style={styles.accountNumber}>100899</Text>
-          </View>
+        <View style={styles.accountContainer}>
+          <Text style={styles.accountLabel}>Account No.</Text>
+          <Text style={styles.accountNumber}>100899</Text>
         </View>
 
         {/* Balance */}
@@ -74,20 +105,25 @@ export default function App() {
                   <Icon
                     name={isBalanceVisible ? "visibility-off" : "visibility"}
                     size={24}
-                    color="black"
+                    color="lightgrey"
                   />
                 </TouchableOpacity>
               </View>
             </View>
             <View style={styles.balanceActions}>
-              <Image
-                source={require("./assets/plus.png")}
+            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Topup')}>
+            <Image
+                source={require("../assets/plus.png")}
                 style={styles.actionIcon}
               />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Transfer')}>
               <Image
-                source={require("./assets/panah.png")}
+                source={require("../assets/panah.png")}
                 style={styles.actionIcon}
               />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -117,12 +153,35 @@ export default function App() {
               amount="- 75.000,00"
               isPositive={false}
             />
+            <TransactionItem
+              name="Adityo Gizwanda"
+              type="Transfer"
+              date="08 December 2024"
+              amount="- 75.000,00"
+              isPositive={false}
+            />
           </View>
         </View>
+        {/* <View>
+        <FlatList
+            data={posts}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+                <View style={styles.postContainer}>
+                <Text style={styles.title}>{item.first_name}</Text>
+                <Text style={styles.body}>{item.last_name}</Text>
+                <Image
+                    source={{uri: item.avatar}}
+                    style={{ width: 200, height: 200}}
+                ></Image>
+                </View>
+            )}
+            />
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 // Transaction Item Component
 const TransactionItem = ({ name, type, date, amount, isPositive }) => (
@@ -174,7 +233,7 @@ const styles = StyleSheet.create({
   },
   accountType: {
     fontSize: 12,
-    color: "gray",
+    color: "black",
   },
   sunIcon: {
     width: 30,
@@ -196,32 +255,48 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginHorizontal: 20,
+    marginTop: 15,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    elevation: 1,
   },
   greetingTitle: {
     fontSize: 18,
     fontWeight: "700",
     color: "black",
+    marginBottom: 15,
   },
   greetingSubtitle: {
     fontSize: 14,
-    color: "gray",
+    color: "black",
   },
   bigSunIcon: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
   },
   accountContainer: {
+    backgroundColor: "#1CA1A1", // Warna latar belakang hijau biru
+    marginHorizontal: 20,
+    marginTop: 15,
+    borderRadius: 10,
+    padding: 15,
+    elevation: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
   },
   accountLabel: {
+    color: "white",
     fontSize: 14,
-    color: "gray",
   },
   accountNumber: {
+    color: "white",
     fontSize: 16,
-    fontWeight: "700",
-    color: "black",
+    fontWeight: "bold",
   },
   balanceContainer: {
     flexDirection: "row",
@@ -229,7 +304,7 @@ const styles = StyleSheet.create({
   },
   balanceLabel: {
     fontSize: 14,
-    color: "gray",
+    color: "black",
   },
   balanceRow: {
     flexDirection: "row",
@@ -242,7 +317,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   balanceActions: {
-    flexDirection: "row",
+    flex: 1,
   },
   actionIcon: {
     width: 40,
@@ -281,7 +356,7 @@ const styles = StyleSheet.create({
   },
   transactionType: {
     fontSize: 14,
-    color: "gray",
+    color: "black",
   },
   transactionDate: {
     fontSize: 12,
@@ -290,5 +365,32 @@ const styles = StyleSheet.create({
   transactionAmount: {
     fontSize: 16,
     fontWeight: "700",
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+  },
+  postContainer: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  body: {
+    fontSize: 14,
+    color: '#555',
   },
 });
