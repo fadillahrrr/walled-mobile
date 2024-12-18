@@ -16,7 +16,7 @@ export const fetchPosts = async () => {
     const response = await api.get("/users");
     return response.data.data;
   } catch (error) {
-    throw new Error("Failed to fetch s: " + error.message);
+    throw new Error("Failed to fetch: " + error.message);
   }
 };
 

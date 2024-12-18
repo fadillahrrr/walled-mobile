@@ -27,7 +27,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -35,7 +35,7 @@ function TabNavigator() {
           let iconName;
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "TopUp") {
+          } else if (route.name === "Topup") {
             iconName = focused ? "wallet" : "wallet-outline";
           } else if (route.name === "Transfer") {
             iconName = focused ? "send" : "send-outline";
@@ -47,23 +47,68 @@ function TabNavigator() {
       })}
     >
       <Tab.Screen name="Home" component={HomePage} />
-      <Tab.Screen name="TopUp" component={TopUpPage} />
+      <Tab.Screen name="Topup" component={TopupPage} />
       <Tab.Screen name="Transfer" component={TransferPage} />
     </Tab.Navigator>
   );
 }
 
 export default function App() {
-  const auth = useAuth();
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Home" component={HomePage} />
-        <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="Topup" component={TopupPage} />
-        <Stack.Screen name="Transfer" component={TransferPage} />
-        <Stack.Screen name="Register" component={RegisterPage} />
+        <Stack.Screen
+          name="Login"
+          component={LoginPage}
+          options={{
+            // headerShown: false // menghilangkan header,
+            title: "Login",
+            headerStyle: {
+              backgroundColor: "teal",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+            headerRight: () => {
+              // <Button
+              //   title='Menu'
+              //   onPress={() => alert('Menu shown')}
+              //   color='white'
+              // />
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Main"
+          component={TabNavigator}
+          options={{
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: "teal",
+            },
+            headerTintColor: "white",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterPage}
+          options={{
+            headerShown: false, //menghilangkan header
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

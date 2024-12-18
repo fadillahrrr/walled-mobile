@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     alignItems: "center",
     borderRadius: 5,
-    marginTop: 260,
+    marginTop: 100,
     marginHorizontal:15,
   },
   topUpText: {

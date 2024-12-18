@@ -92,46 +92,53 @@ export default function HomePage() {
           <Text style={styles.accountNumber}>100899</Text>
         </View>
 
-        {/* Balance */}
-        <View style={styles.card}>
-          <View style={styles.balanceContainer}>
-            <View>
-              <Text style={styles.balanceLabel}>Balance</Text>
-              <View style={styles.balanceRow}>
-                <Text style={styles.balanceAmount}>
-                  {isBalanceVisible ? "Rp 10.000.000" : "•••••••"}
-                </Text>
-                <TouchableOpacity onPress={toggleBalanceVisibility}>
-                  <Icon
-                    name={isBalanceVisible ? "visibility-off" : "visibility"}
-                    size={24}
-                    color="lightgrey"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.balanceActions}>
-            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Topup')}>
-            <Image
-                source={require("../assets/plus.png")}
-                style={styles.actionIcon}
-              />
-            </TouchableOpacity>
+{/* Balance */}
+<View style={styles.card}>
+  <View style={styles.balanceContainer}>
+    {/* Kolom Balance */}
+    <View style={styles.balanceColumn}>
+      <Text style={styles.balanceLabel}>Balance</Text>
+      <View style={styles.balanceRow}>
+        <Text style={styles.balanceAmount}>
+          {isBalanceVisible ? "Rp 10.000.000" : "•••••••"}
+        </Text>
+        <TouchableOpacity onPress={toggleBalanceVisibility}>
+          <Icon
+            name={isBalanceVisible ? "visibility" : "visibility-off"}
+            size={24}
+            color="lightgrey"
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
 
-            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Transfer')}>
-              <Image
-                source={require("../assets/panah.png")}
-                style={styles.actionIcon}
-              />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+    {/* Kolom Actions (Tombol Plus dan Panah) */}
+    <View style={styles.iconContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Topup")}
+      >
+        <Image
+          source={require("../assets/plus.png")}
+          style={styles.actionIcon}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Transfer")}
+      >
+        <Image
+          source={require("../assets/panah.png")}
+          style={styles.actionIcon}
+        />
+      </TouchableOpacity>
+    </View>
+  </View>
+</View>
 
         {/* Transaction History */}
         <View style={styles.card}>
           <Text style={styles.historyTitle}>Transaction History</Text>
-          <View style={styles.transactionContainer}>
+          <View style={styles.separator}/>
+          <View style={styles.transactionContaine}>
             <TransactionItem
               name="Adityo Gizwanda"
               type="Transfer"
@@ -162,22 +169,6 @@ export default function HomePage() {
             />
           </View>
         </View>
-        {/* <View>
-        <FlatList
-            data={posts}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-                <View style={styles.postContainer}>
-                <Text style={styles.title}>{item.first_name}</Text>
-                <Text style={styles.body}>{item.last_name}</Text>
-                <Image
-                    source={{uri: item.avatar}}
-                    style={{ width: 200, height: 200}}
-                ></Image>
-                </View>
-            )}
-            />
-        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -277,7 +268,7 @@ const styles = StyleSheet.create({
     height: 60,
   },
   accountContainer: {
-    backgroundColor: "#1CA1A1", // Warna latar belakang hijau biru
+    backgroundColor: "#1CA1A1",
     marginHorizontal: 20,
     marginTop: 15,
     borderRadius: 10,
@@ -301,6 +292,11 @@ const styles = StyleSheet.create({
   balanceContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+  balanceColumn: {
+    flexDirection: "column",
+    justifyContent: "center",
   },
   balanceLabel: {
     fontSize: 14,
@@ -318,11 +314,16 @@ const styles = StyleSheet.create({
   },
   balanceActions: {
     flex: 1,
+    justifyContent:"flex-end",
+  },
+  iconContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   actionIcon: {
-    width: 40,
-    height: 40,
-    marginHorizontal: 5,
+    width: 45,
+    height: 45,
   },
   historyTitle: {
     fontSize: 16,
@@ -348,6 +349,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: "#E0E0E0",
     marginRight: 10,
+  },
+  separator:{
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    marginVertical: 10,
+    marginHorizontal:-15,
   },
   transactionName: {
     fontSize: 16,
@@ -388,9 +395,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  body: {
-    fontSize: 14,
-    color: '#555',
   },
 });

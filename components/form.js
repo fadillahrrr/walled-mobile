@@ -52,7 +52,7 @@ export default function Form({ state }) {
       const token = await loginFunc(email, password);
       // console.log("token", token);
       AsyncStorage.setItem(token.token);
-      navigation.navigate("Home");
+      navigation.navigate("Main");
       return;
     } catch (error) {
       console.log("error", error);

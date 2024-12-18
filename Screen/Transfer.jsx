@@ -142,9 +142,9 @@ const styles = StyleSheet.create({
   balanceContainer: {
     marginTop: 5,
     color: "#1CA1A1",
-    // textAlign: "right",
+    alignItems: "center",
     justifyContent: "space-between",
-    // flexDirection:"row",
+    flexDirection:"row",
   },
   balanceLabel: {
     fontSize: 12,
@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#1CA1A1",
   },
-  
   notesInput: {
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     marginHorizontal: 15,
-    marginTop: 250,
+    marginTop: 125,
   },
   transferButtonText: {
     color: "#FFF",
